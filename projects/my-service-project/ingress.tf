@@ -1,5 +1,5 @@
 module "web_access" {
-  source = "modules/ingress_allow"
+  source = "../modules/ingress_allow"
 
   project_id    = "eminent-torch-451100-r2"
   network_name  = "default"
