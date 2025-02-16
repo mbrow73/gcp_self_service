@@ -15,8 +15,8 @@ jobs:
 
       - name: Run Merge Script
         run: |
-          chmod +x scripts/merge_tfvars.sh
-          ./scripts/merge_tfvars.sh
+          chmod +x ../scripts/merge_tfvars.sh
+          ../scripts/merge_tfvars.sh
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
