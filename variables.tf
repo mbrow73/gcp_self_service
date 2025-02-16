@@ -1,4 +1,4 @@
-variable "creds" {
+variable "GOOGLE_CREDENTIALS" {
     description = "The credentials to authenticate with GCP"
     type        = string
     }
