@@ -36,7 +36,4 @@ jobs:
         run: terraform show -json plan.out > plan.json
 
       - name: Run Conftest Policy Checks
-        uses: instrumenta/conftest-action@v2.0.0
-        with:
-          files: plan.json
-          policy_paths: policies
+        run: docker run --rm -v "$(pwd):/data" instrumenta/conftest test plan.json --policy policies
