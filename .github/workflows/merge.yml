@@ -28,5 +28,6 @@ jobs:
 
       - name: Terraform Plan (No Refresh)
         env:
-             TF_LOG: DEBUG
-        run: terraform plan -no-color -var-file=combined_projects.tfvars.json
+          TF_LOG: DEBUG
+          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+        run: terraform plan -no-color -refresh=false -var-file=combined_projects.tfvars.json
