@@ -1,6 +1,6 @@
 # OUTBOUND CONNECTIONS
 module "db_access" {
-  source = "../modules/egress_allow"
+  source = "../Modules/egress_allow"
 
   project_id    = "eminent-torch-451100-r2"
   network_name  = "default"
