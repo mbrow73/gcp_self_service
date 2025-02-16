@@ -1,15 +1,11 @@
-provider "google" {
-  project = var.project_id
-  region  = var.region
-}
+// Removed provider block – we rely on the root-level provider.
 
+// Call the firewall_rules module:
 module "firewall_rules" {
   source         = "../firewall_rules"
   project_id     = var.project_id
-  network        = var.network  // Defaults to "default".
+  network        = var.network
   firewall_rules = var.firewall_rules
 }
 
-output "firewall_rule_ids" {
-  value = module.firewall_rules.firewall_rule_ids
-}
+// (No output defined here; outputs will be defined in outputs.tf)
