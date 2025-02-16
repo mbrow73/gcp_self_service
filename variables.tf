@@ -1,18 +1,18 @@
-variable "GOOGLE_CREDENTIALS" {
-    description = "The credentials to authenticate with GCP"
-    type        = string
-    }
-
-variable "project" {
-    description = "The project ID to deploy firewall rules"
-    type        = string
-    }
-
-variable "region" {
-    description = "The region to deploy firewall rules"
-    type        = string
-    default     = "us-central1"
-    }
-
-
-  
+variable "projects" {
+  description = "Map of project configurations"
+  type = map(object({
+    project_id     = string
+    region         = string
+    firewall_rules = list(object({
+      name               = string
+      direction          = string    // "INGRESS" or "EGRESS"
+      source_ranges      = list(string)
+      destination_ranges = list(string)
+      target_tags        = list(string)
+      allowed = list(object({
+        protocol = string
+        ports    = list(string)
+      }))
+    }))
+  }))
+}

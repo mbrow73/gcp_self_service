@@ -1,5 +1,4 @@
 locals {
-  # Create a map from the list of firewall rule objects keyed by each rule's name.
   firewall_rule_map = { for rule in var.firewall_rules : rule.name => rule }
 }
 
@@ -20,10 +19,9 @@ resource "google_compute_firewall" "this" {
     }
   }
 
-  # Apply source_ranges for INGRESS and destination_ranges for EGRESS.
+  // Use source_ranges for INGRESS and destination_ranges for EGRESS.
   source_ranges      = each.value.direction == "INGRESS" ? each.value.source_ranges : null
   destination_ranges = each.value.direction == "EGRESS" ? each.value.destination_ranges : null
 
-  # Always use target_tags.
   target_tags = each.value.target_tags
 }
