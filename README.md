@@ -1,3 +1,25 @@
+# Repo Hierarchy
+.
+├── README.md
+├── versions.tf
+├── modules
+│   └── firewall_rules
+│       ├── main.tf
+│       ├── variables.tf
+│       └── outputs.tf
+├── projects
+│   └── sample-project
+│       ├── main.tf
+│       ├── variables.tf
+│       └── terraform.tfvars
+└── .github
+    ├── CODEOWNERS
+    └── workflows
+        └── terraform.yml
+
+
+
+
 # GCP Firewall Rule Management Portal
 
 ```mermaid
