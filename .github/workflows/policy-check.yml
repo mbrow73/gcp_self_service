@@ -24,19 +24,19 @@ jobs:
           PROJECTS: ${{ steps.changed-projects.outputs.all_changed_files }}
         run: |
           # Extract unique project directories
-          PROJECT_DIRS=$(echo "$PROJECTS" | jq -r 'map(select(. | contains("/")) | map(split("/")[1]) | unique | .[]')
-          
+          PROJECT_DIRS=$(echo "$PROJECTS" | jq -r '.[] | split("/")[1]' | sort | uniq)
+
           for PROJECT in $PROJECT_DIRS; do
             echo "Checking project: $PROJECT"
             cd "projects/$PROJECT"
-            
+
             # Generate plan
             terraform init
             terraform plan -out=tfplan
             terraform show -json tfplan > plan.json
-            
+
             # Run policies
             conftest test plan.json -p /policies/ --combine
-            
-            cd ..
+
+            cd ../..
           done
