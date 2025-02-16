@@ -26,5 +26,7 @@ jobs:
       - name: Terraform Init
         run: terraform init
 
-      - name: Terraform Plan
+      - name: Terraform Plan (No Refresh)
+        env:
+             TF_LOG: DEBUG
         run: terraform plan -no-color -var-file=combined_projects.tfvars.json
