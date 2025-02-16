@@ -1,0 +1,42 @@
+name: Security Policy Checks
+on: pull_request
+
+jobs:
+  security-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Detect changed projects
+        id: changed-projects
+        uses: tj-actions/changed-files@v34
+        with:
+          files: |
+            projects/**/*.tf
+          json: true
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+
+      - name: Run policy checks for all changed projects
+        env:
+          PROJECTS: ${{ steps.changed-projects.outputs.all_changed_files }}
+        run: |
+          # Extract unique project directories
+          PROJECT_DIRS=$(echo "$PROJECTS" | jq -r 'map(select(. | contains("/")) | map(split("/")[1]) | unique | .[]')
+          
+          for PROJECT in $PROJECT_DIRS; do
+            echo "Checking project: $PROJECT"
+            cd "projects/$PROJECT"
+            
+            # Generate plan
+            terraform init
+            terraform plan -out=tfplan
+            terraform show -json tfplan > plan.json
+            
+            # Run policies
+            conftest test plan.json -p /policies/ --combine
+            
+            cd ..
+          done
