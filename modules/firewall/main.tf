@@ -4,7 +4,7 @@ resource "google_compute_firewall" "this" {
   network = var.vpc
 
   direction = var.direction
-  priority  = var.priority
+  priority  = 1000
 
   allow {
     protocol = var.protocol
