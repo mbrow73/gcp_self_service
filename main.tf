@@ -30,7 +30,7 @@ module "firewall_ingress" {
   project   = each.value.project   # project is provided in the JSON
   direction = "INGRESS"
 
-  priority       = each.value.ingress.priority
+  priority       = 1000
   protocol       = each.value.ingress.protocol
   ports          = each.value.ingress.ports
   source_ranges  = each.value.ingress.source_ranges
