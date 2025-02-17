@@ -135,6 +135,16 @@ Confirm rule_name uniqueness in your configuration.
 
 Require NetSec approval before merging.
 
+
+## Sentinel policy thoughts
+Allowed IP Ranges:
+
+Ingress Rules: Ensure that any source IP ranges are within approved private subnets (e.g., only allow ranges in 192.168.0.0/16 and 172.16.0.0/12). This prevents accidentally allowing traffic from public networks.
+Egress Rules: Similarly, enforce that destination IP ranges are within the approved private ranges, unless explicitly whitelisted.
+Naming Conventions and Consistency:
+
+Firewall rule names should adhere to a naming standard (for example, carid-rulepurpose)
+
 ❓ FAQ & Troubleshooting
 Q: My JSON isn’t being recognized by Terraform.
 A: Ensure: No trailing commas in JSON.
