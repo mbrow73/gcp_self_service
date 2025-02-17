@@ -1,5 +1,5 @@
-variable "name" {
-  description = "The name of the firewall rule."
+variable "rule_name" {
+  description = "Name for the firewall rule."
   type        = string
 }
 

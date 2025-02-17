@@ -1,5 +1,5 @@
 resource "google_compute_firewall" "this" {
-  name    = var.name
+  name    = var.rule_name
   project = var.project
   network = var.vpc
 
