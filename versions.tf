@@ -1,5 +1,5 @@
 provider "google" {
     credentials = var.GOOGLE_CREDENTIALS
-    project     = var.GOOGLE_PROJECT_ID
+    project     = var.project
     region      = "us-central1"
 }
