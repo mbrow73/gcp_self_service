@@ -16,8 +16,6 @@ Modular Terraform: Reusable codebase with zero redundancy.
 CI/CD Automation: Terraform plans/applies on workspace run
 
 🗂 Repository Structure
-bash
-Copy
 📁 configs/            # Team-specific firewall configurations
    ├── team-a.json     # 🔐 Team A's rules
    └── team-b.json     # 🔐 Team B's rules
@@ -32,8 +30,6 @@ Copy
 1. Create Your Configuration File
 Add a JSON file to configs/ with this structure:
 
-json
-Copy
 // configs/your-team.json
 [
   {
@@ -117,8 +113,6 @@ Copy
 ]
 
 2. Submit Changes via PR
-bash
-Copy
 git checkout -b REQXXXXX
 git add configs/your-team.json
 git commit -m "Add firewall rules for [REQXXXXX]"
