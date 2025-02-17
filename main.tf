@@ -8,10 +8,6 @@ terraform {
 }
 
 # Use a common provider; note that each google_compute_firewall resource can override the project.
-provider "google" {
-  project = "testautomation-451116"  # This is a fallback; actual project is set per resource
-  region  = "us-central1"
-}
 
 locals {
   # List all JSON config files under configs/
