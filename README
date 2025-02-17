@@ -172,3 +172,12 @@ For urgent issues or PR reviews:
 Slack: #network-security
 
 Email: netsec-team@yourcompany.com
+
+
+To do:
+
+Add ticketing system with github issues.
+
+Refine naming convention.
+
+Add default rules to all service projects under a folder with exclusions (then figure out how to silence errors)
