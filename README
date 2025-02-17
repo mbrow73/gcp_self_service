@@ -1,0 +1,39 @@
+# Contributing to the Firewall Deployment Repository
+
+## Overview
+
+This repository centrally manages GCP firewall rules for nonroutable service projects. Each team must provide its own configuration—including the specific project and VPC—to deploy firewall rules in their designated project.
+
+## Directory Structure
+
+- **configs/**: Contains team-specific JSON configuration files (e.g., `team-a.json`, `team-b.json`).  
+  **Important:** Each file must include:
+  - `"project"`: The GCP project ID for the team.
+  - `"vpc"`: The VPC name (or self-link) where the firewall rule should be applied.
+  - Firewall rule settings under `"ingress"` and `"egress"`.
+- **modules/firewall/**: Contains the reusable Terraform module for creating firewall rules.
+- **main.tf**: Loads all team JSON configurations and uses them to instantiate firewall rules.
+- **.github/**: Contains CODEOWNERS and CI/CD workflow configuration.
+- **docs/**: Contains documentation and contributing guidelines.
+
+## Adding a New Team
+
+1. Create a new JSON file (e.g., `team-c.json`) under **configs/**:
+   ```json
+   {
+     "name": "team-c",
+     "project": "team-c-project-id",
+     "vpc": "team-c-vpc",
+     "ingress": {
+         "protocol": "tcp",
+         "ports": ["80", "443"],
+         "source_ranges": ["0.0.0.0/0"],
+         "target_tags": ["team-c-web"]
+     },
+     "egress": {
+         "protocol": "tcp",
+         "ports": ["8080"],
+         "destination_ranges": ["10.0.1.0/24"],
+         "target_tags": ["team-c-app"]
+     }
+   }
