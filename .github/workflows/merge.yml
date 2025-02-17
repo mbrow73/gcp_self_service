@@ -15,7 +15,7 @@ jobs:
 
       - name: Merge Team tfvars Files
         run: |
-          jq -s 'reduce .[] as $item ({}; . * $item) | {projects: .}' teams/*/projects.tfvars.json > combined_projects.tfvars.json
+          jq -s 'reduce .[] as $item ({}; . * $item) | {projects: .}' teams/*/project.tfvars.json > combined_projects.tfvars.json
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
