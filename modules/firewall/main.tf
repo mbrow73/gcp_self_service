@@ -1,27 +1,29 @@
-locals {
-  firewall_rule_map = { for rule in var.firewall_rules : rule.name => rule }
-}
-
 resource "google_compute_firewall" "this" {
-  for_each = local.firewall_rule_map
+  name    = var.name
+  project = var.project       # Deploy to the team’s project
+  network = var.vpc           # The VPC in the team’s project
 
-  name      = each.value.name
-  project   = var.project_id
-  network   = var.network
-  direction = each.value.direction
-  priority  = 1000
+  direction = var.direction
+  priority  = var.priority
 
-  dynamic "allow" {
-    for_each = each.value.allowed
+  allow {
+    protocol = var.protocol
+    ports    = var.ports
+  }
+
+  dynamic "source_ranges" {
+    for_each = var.direction == "INGRESS" ? [1] : []
     content {
-      protocol = allow.value.protocol
-      ports    = allow.value.ports
+      values = var.source_ranges
     }
   }
 
-  // Use source_ranges for INGRESS and destination_ranges for EGRESS.
-  source_ranges      = each.value.direction == "INGRESS" ? each.value.source_ranges : null
-  destination_ranges = each.value.direction == "EGRESS" ? each.value.destination_ranges : null
+  dynamic "destination_ranges" {
+    for_each = var.direction == "EGRESS" ? [1] : []
+    content {
+      values = var.destination_ranges
+    }
+  }
 
-  target_tags = each.value.target_tags
+  target_tags = var.target_tags
 }
