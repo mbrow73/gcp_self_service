@@ -1,22 +1,78 @@
-{
-    "carid": "team-a",
-    "project": "testautomation-451116",
-    "vpc": "default",
-    "ingress": {
-        "rule_name": "ssh-ingress",  
-        "priority": 1000,
-        "protocol": "tcp",
-        "ports": ["22"],
-        "source_ranges": ["0.0.0.0/0"],
-        "target_tags": ["team-a-ssh"]
+[
+    {
+      "carid": "19805234",
+      "project": "testautomation-451116",
+      "vpc": "default",
+      "ingress": [
+        {
+          "rule_name": "custom-ingress-rule-1",
+          "priority": 1000,
+          "protocol": "tcp",
+          "ports": ["80"],
+          "source_ranges": ["10.0.0.0/8"],
+          "target_tags": ["web-servers"]
+        },
+        {
+          "rule_name": "custom-ingress-rule-2",
+          "priority": 900,
+          "protocol": "tcp",
+          "ports": ["443"],
+          "source_ranges": ["10.0.0.0/8"],
+          "target_tags": ["secure-web-servers"]
+        }
+      ],
+      "egress": [
+        {
+          "rule_name": "custom-egress-rule-1",
+          "protocol": "udp",
+          "ports": ["53"],
+          "destination_ranges": ["8.8.8.8/32"],
+          "target_tags": ["dns-servers"]
+        },
+        {
+          "rule_name": "custom-egress-rule-2",
+          "protocol": "tcp",
+          "ports": ["443"],
+          "destination_ranges": ["8.8.4.4/32"],
+          "target_tags": ["external-apps"]
+        }
+      ]
     },
-    "egress": {
-        "rule_name": "composer-egress",  
-        "priority": 1000,
-        "protocol": "tcp",
-        "ports": ["8080"],
-        "destination_ranges": ["192.168.1.0/24"],
-        "target_tags": ["team-a-composer"]
+    {
+      "carid": "17205005",
+      "project": "spring-forest-451020-p5",
+      "vpc": "default",
+      "ingress": [
+        {
+          "rule_name": "custom-ingress-rule-1",
+          "protocol": "tcp",
+          "ports": ["80"],
+          "source_ranges": ["10.0.0.0/8"],
+          "target_tags": ["web-servers"]
+        },
+        {
+          "rule_name": "custom-ingress-rule-2",
+          "protocol": "tcp",
+          "ports": ["443"],
+          "source_ranges": ["10.0.0.0/8"],
+          "target_tags": ["secure-web-servers"]
+        }
+      ],
+      "egress": [
+        {
+          "rule_name": "custom-egress-rule-1",
+          "protocol": "udp",
+          "ports": ["53"],
+          "destination_ranges": ["8.8.8.8/32"],
+          "target_tags": ["dns-servers"]
+        },
+        {
+          "rule_name": "custom-egress-rule-2",
+          "protocol": "tcp",
+          "ports": ["443"],
+          "destination_ranges": ["8.8.4.4/32"],
+          "target_tags": ["external-apps"]
+        }
+      ]
     }
-  }
-   
+  ]

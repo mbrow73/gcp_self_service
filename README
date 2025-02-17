@@ -1,39 +1,164 @@
-# Contributing to the Firewall Deployment Repository
+🔥 Centralized Firewall Deployment for GCP Service Projects
+A Terraform-Powered, Auditable, and Team-Centric Firewall Management Solution
 
-## Overview
+Workflow Diagram
+Visualize the workflow with this Mermaid diagram (interactive version).
 
-This repository centrally manages GCP firewall rules for nonroutable service projects. Each team must provide its own configuration—including the specific project and VPC—to deploy firewall rules in their designated project.
+🌟 Why This Repository?
+Manage GCP firewall rules securely, collaboratively, and at scale. Designed for nonroutable service projects, this solution empowers teams to self-manage their network configurations while enforcing centralized governance via:
 
-## Directory Structure
+NetSec-Approved Changes: All PRs require Network Security review.
 
-- **configs/**: Contains team-specific JSON configuration files (e.g., `team-a.json`, `team-b.json`).  
-  **Important:** Each file must include:
-  - `"project"`: The GCP project ID for the team.
-  - `"vpc"`: The VPC name (or self-link) where the firewall rule should be applied.
-  - Firewall rule settings under `"ingress"` and `"egress"`.
-- **modules/firewall/**: Contains the reusable Terraform module for creating firewall rules.
-- **main.tf**: Loads all team JSON configurations and uses them to instantiate firewall rules.
-- **.github/**: Contains CODEOWNERS and CI/CD workflow configuration.
-- **docs/**: Contains documentation and contributing guidelines.
+GitOps Workflow: Version-controlled, auditable JSON configurations.
 
-## Adding a New Team
+Modular Terraform: Reusable codebase with zero redundancy.
 
-1. Create a new JSON file (e.g., `team-c.json`) under **configs/**:
-   ```json
-   {
-     "name": "team-c",
-     "project": "team-c-project-id",
-     "vpc": "team-c-vpc",
-     "ingress": {
-         "protocol": "tcp",
-         "ports": ["80", "443"],
-         "source_ranges": ["0.0.0.0/0"],
-         "target_tags": ["team-c-web"]
-     },
-     "egress": {
-         "protocol": "tcp",
-         "ports": ["8080"],
-         "destination_ranges": ["10.0.1.0/24"],
-         "target_tags": ["team-c-app"]
-     }
-   }
+CI/CD Automation: Terraform plans/applies on workspace run
+
+🗂 Repository Structure
+bash
+Copy
+📁 configs/            # Team-specific firewall configurations
+   ├── team-a.json     # 🔐 Team A's rules
+   └── team-b.json     # 🔐 Team B's rules
+📁 modules/
+   └── firewall/       # 🛠 Reusable Terraform module
+📄 main.tf             # 🧩 Aggregates all configs into resources
+📄 .github/
+   ├── CODEOWNERS      # 👥 Enforces NetSec reviews
+   └── workflows/      # ⚙️ CI/CD pipelines
+📚 docs/               # 📖 Guides & policies (optional)
+🚀 Quick Start for Teams
+1. Create Your Configuration File
+Add a JSON file to configs/ with this structure:
+
+json
+Copy
+// configs/your-team.json
+[
+  {
+    "carid": "your-team-id",
+    "project": "your-gcp-project-1",
+    "vpc": "your-vpc-name",
+    "ingress": [
+      {
+        "rule_name": "custom-ingress-rule-1",
+        "priority": 1000,
+        "protocol": "tcp",
+        "ports": ["80"],
+        "source_ranges": ["10.0.0.0/8"],
+        "target_tags": ["web-servers"]
+      },
+      {
+        "rule_name": "custom-ingress-rule-2",
+        "priority": 900,
+        "protocol": "tcp",
+        "ports": ["443"],
+        "source_ranges": ["10.0.0.0/8"],
+        "target_tags": ["secure-web-servers"]
+      }
+    ],
+    "egress": [
+      {
+        "rule_name": "custom-egress-rule-1",
+        "protocol": "udp",
+        "ports": ["53"],
+        "destination_ranges": ["8.8.8.8/32"],
+        "target_tags": ["dns-servers"]
+      },
+      {
+        "rule_name": "custom-egress-rule-2",
+        "protocol": "tcp",
+        "ports": ["443"],
+        "destination_ranges": ["8.8.4.4/32"],
+        "target_tags": ["external-apps"]
+      }
+    ]
+  },
+  {
+    "carid": "carid",
+    "project": "your-gcp-project-2",
+    "vpc": "your-vpc-name",
+    "ingress": [
+      {
+        "rule_name": "custom-ingress-rule-1",
+        "priority": 1000,
+        "protocol": "tcp",
+        "ports": ["80"],
+        "source_ranges": ["10.0.0.0/8"],
+        "target_tags": ["web-servers"]
+      },
+      {
+        "rule_name": "custom-ingress-rule-2",
+        "priority": 900,
+        "protocol": "tcp",
+        "ports": ["443"],
+        "source_ranges": ["10.0.0.0/8"],
+        "target_tags": ["secure-web-servers"]
+      }
+    ],
+    "egress": [
+      {
+        "rule_name": "custom-egress-rule-1",
+        "protocol": "udp",
+        "ports": ["53"],
+        "destination_ranges": ["8.8.8.8/32"],
+        "target_tags": ["dns-servers"]
+      },
+      {
+        "rule_name": "custom-egress-rule-2",
+        "protocol": "tcp",
+        "ports": ["443"],
+        "destination_ranges": ["8.8.4.4/32"],
+        "target_tags": ["external-apps"]
+      }
+    ]
+  }
+]
+
+2. Submit Changes via PR
+bash
+Copy
+git checkout -b REQXXXXX
+git add configs/your-team.json
+git commit -m "Add firewall rules for [REQXXXXX]"
+git push origin REQXXXXX
+➡️ Create a Pull Request from your branch. NetSec will review within 1 business day.
+
+✅ Validation & CI/CD
+Pre-PR Checklist
+Run terraform validate and terraform plan locally.
+
+Validate JSON syntax using JSONLint.
+
+Confirm rule_name uniqueness in your configuration.
+
+Require NetSec approval before merging.
+
+❓ FAQ & Troubleshooting
+Q: My JSON isn’t being recognized by Terraform.
+A: Ensure: No trailing commas in JSON.
+
+All required keys (carid, project, etc.) are present.
+
+File is saved in configs/ with .json extension.
+
+Q: Can I modify another team’s configuration?
+A: ❌ No. The CODEOWNERS file restricts edits to your team’s JSON files.
+
+Q: How are rule name conflicts handled?
+A: Terraform enforces uniqueness via carid and rule_name. Conflicts fail at plan stage.
+
+📜 Governance Rules
+NetSec owns configs/, modules/, and root Terraform files.
+
+Teams may only edit their own JSON files in configs/.
+
+Direct commits to main are blocked – PRs required.
+
+📞 Support
+For urgent issues or PR reviews:
+
+Slack: #network-security
+
+Email: netsec-team@yourcompany.com
