@@ -1,12 +1,13 @@
 locals {
   config_files = fileset("${path.module}/configs", "*.json")
   
-  # For each file, decode it into an array of objects. Then flatten all arrays.
+  # Each file contains an array of config objects; flatten them into one list.
   all_configs = flatten([
     for file in local.config_files : jsondecode(file("${path.module}/configs/${file}"))
   ])
   
-  # Build a flattened list of all ingress rules with extra attributes merged in from the parent config
+  # Flatten all ingress rules across all configuration objects,
+  # and merge the parent attributes (carid, project, vpc) into each rule.
   ingress_rules = flatten([
     for cfg in local.all_configs : [
       for rule in cfg.ingress : merge(rule, {
@@ -17,7 +18,7 @@ locals {
     ]
   ])
   
-  # Build a flattened list of all egress rules with extra attributes merged in from the parent config
+  # Flatten all egress rules across all configuration objects.
   egress_rules = flatten([
     for cfg in local.all_configs : [
       for rule in cfg.egress : merge(rule, {
@@ -30,7 +31,7 @@ locals {
 }
 
 module "firewall_ingress" {
-  # Create a unique key for each ingress rule by combining carid with an index
+  # Create a unique key for each ingress rule.
   for_each = { for idx, rule in local.ingress_rules : "${rule.carid}-${idx}" => rule }
   
   source    = "./modules/firewall"
@@ -38,7 +39,7 @@ module "firewall_ingress" {
   project   = each.value.project
   vpc       = each.value.vpc
   direction = "INGRESS"
-  priority  = each.value.priority
+  priority  = 1000
   protocol  = each.value.protocol
   ports     = each.value.ports
   source_ranges = each.value.source_ranges
@@ -46,7 +47,7 @@ module "firewall_ingress" {
 }
 
 module "firewall_egress" {
-  # Create a unique key for each egress rule
+  # Create a unique key for each egress rule.
   for_each = { for idx, rule in local.egress_rules : "${rule.carid}-${idx}" => rule }
   
   source    = "./modules/firewall"
@@ -54,7 +55,7 @@ module "firewall_egress" {
   project   = each.value.project
   vpc       = each.value.vpc
   direction = "EGRESS"
-  priority  = each.value.priority
+  priority  = 1000
   protocol  = each.value.protocol
   ports     = each.value.ports
   destination_ranges = each.value.destination_ranges
