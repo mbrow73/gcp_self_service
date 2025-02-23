@@ -17,6 +17,8 @@ Implement **hierarchical firewall policies** at the folder level to:
 3. Delegate specific exceptions to local VPC firewall rules.
 
 ### Architecture Diagram
+
+
 graph TD
     %% Folder Structure
     subgraph Folder["GCP Folder (Hierarchy)"]
