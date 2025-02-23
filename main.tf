@@ -91,7 +91,7 @@ resource "google_compute_firewall_policy_rule" "gotonext_all_egress" {
   enable_logging          = false
   action                  = "allow"
   direction               = "EGRESS"
-  disabled                = false
+  disabled                = true
   target_service_accounts = []
 
   match {
@@ -117,7 +117,7 @@ resource "google_compute_firewall_policy_rule" "deny_all_egress" {
   enable_logging          = true
   action                  = "deny"
   direction               = "EGRESS"
-  disabled                = false
+  disabled                = true
   target_service_accounts = []
 
   match {
