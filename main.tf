@@ -62,3 +62,36 @@ module "firewall_egress" {
   target_tags        = each.value.target_tags
 }
 
+## default rules fw testing
+
+# Create a centralized firewall policy.
+resource "google_compute_firewall_policy" "default_deny_policy" {
+  short_name  = "default-deny-egress"
+  parent      = var.folder_id
+  description = "Firewall policy to deny all egress traffic by default for all projects under prod folder"
+}
+
+resource "google_compute_firewall_policy_rule" "primary" {
+  firewall_policy         = google_compute_firewall_policy.default_deny_policy.id
+  description             = "Resource created for Terraform acceptance testing"
+  priority                = 1000
+  enable_logging          = true
+  action                  = "deny"
+  direction               = "EGRESS"
+  disabled                = false
+  target_service_accounts = []
+
+  match {
+    dest_ip_ranges            = ["0.0.0.0/0"]
+    dest_fqdns                = []
+    dest_region_codes         = []
+    dest_threat_intelligences = ["iplist-known-malicious-ips"]
+    src_address_groups        = []
+    dest_address_groups       = []
+
+    layer4_configs {
+      ip_protocol = "tcp"
+      ports       = ["*"]
+    }
+  }
+}
