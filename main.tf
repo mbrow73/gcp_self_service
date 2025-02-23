@@ -62,15 +62,43 @@ module "firewall_egress" {
   target_tags        = each.value.target_tags
 }
 
-## default rules fw testing
+## default rules fw testing ##
 
-# Create a centralized firewall policy for default rules like ofac/threat intel/default egress deny.
+# Create a centralized firewall policy for default rules like ofac/threat intel/default egress deny. Exceptions are required to pass expected traffic to lower level rules (VPC firewall) #
 resource "google_compute_firewall_policy" "default_deny_policy" {
   short_name  = "default-deny-egress"
   parent      = var.folder_id
   description = "Firewall policy to deny all egress traffic by default for all projects under prod folder"
 }
 
+### EGRESS RULES ###
+
+resource "google_compute_firewall_policy_rule" "gotonext_all_egress" {
+  firewall_policy         = google_compute_firewall_policy.default_deny_policy.id
+  description             = "Resource created for Terraform acceptance testing"
+  priority                = 1
+  enable_logging          = true
+  action                  = "goto_next"
+  direction               = "EGRESS"
+  disabled                = false
+  target_service_accounts = []
+
+  match {
+    dest_ip_ranges            = ["172.16.0.0/12", "192.168.0.0/16"]
+    src_ip_ranges             = []
+    dest_fqdns                = []
+    src_fqdns                 = []
+    dest_region_codes         = []
+    dest_threat_intelligences = []
+
+    layer4_configs {
+      ip_protocol = "all"
+      ports       = [""]
+    }
+  }
+}
+
+## deny all other traffic ##
 resource "google_compute_firewall_policy_rule" "deny_all_egress" {
   firewall_policy         = google_compute_firewall_policy.default_deny_policy.id
   description             = "Resource created for Terraform acceptance testing"
@@ -85,6 +113,7 @@ resource "google_compute_firewall_policy_rule" "deny_all_egress" {
     dest_ip_ranges            = ["0.0.0.0/0"]
     src_ip_ranges             = []
     dest_fqdns                = []
+    src_fqdns                 = []
     dest_region_codes         = []
     dest_threat_intelligences = []
 
@@ -94,7 +123,37 @@ resource "google_compute_firewall_policy_rule" "deny_all_egress" {
     }
   }
 }
+### INGRESS RULES ###
 
+
+## pass known traffic to vpc firewall rules ##
+resource "google_compute_firewall_policy_rule" "gotonext_all_ingress" {
+  firewall_policy         = google_compute_firewall_policy.default_deny_policy.id
+  description             = "Resource created for Terraform acceptance testing"
+  priority                = 2
+  enable_logging          = true
+  action                  = "goto_next"
+  direction               = "INGRESS"
+  disabled                = false
+  target_service_accounts = []
+
+  match {
+    src_ip_ranges             = ["172.16.0.0/12", "192.168.0.0/16"]
+    dest_ip_ranges            = []
+    src_fqdns                 = []
+    dest_fqdns                = []
+    src_region_codes          = []
+    src_threat_intelligences  = []
+
+    layer4_configs {
+      ip_protocol = "all"
+      ports       = [""]
+    }
+  }
+}
+
+
+## deny all other traffic ##
 resource "google_compute_firewall_policy_rule" "deny_all_ingress" {
   firewall_policy         = google_compute_firewall_policy.default_deny_policy.id
   description             = "Resource created for Terraform acceptance testing"
@@ -106,9 +165,10 @@ resource "google_compute_firewall_policy_rule" "deny_all_ingress" {
   target_service_accounts = []
 
   match {
-    dest_ip_ranges            = ["0.0.0.0/0"]
-    src_ip_ranges             = []
+    src_ip_ranges             = ["0.0.0.0/0"]
+    dest_ip_ranges            = []
     src_fqdns                 = []
+    dest_fqdns                = []
     src_region_codes          = []
     src_threat_intelligences  = []
 
