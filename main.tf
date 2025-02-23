@@ -62,7 +62,3 @@ module "firewall_egress" {
   target_tags        = each.value.target_tags
 }
 
-resource "google_folder" "Prod" {
-  display_name = "Prod"
-  parent       = "organizations/866579528862"
-}
