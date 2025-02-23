@@ -37,42 +37,5 @@
           "target_tags": ["external-apps"]
         }
       ]
-    },
-    {
-      "carid": "17205005",
-      "project": "spring-forest-451020-p5",
-      "vpc": "default",
-      "ingress": [
-        {
-          "rule_name": "custom-ingress-rule-1",
-          "protocol": "tcp",
-          "ports": ["80"],
-          "source_ranges": ["10.0.0.0/8"],
-          "target_tags": ["web-servers"]
-        },
-        {
-          "rule_name": "custom-ingress-rule-2",
-          "protocol": "tcp",
-          "ports": ["443"],
-          "source_ranges": ["10.0.0.0/8"],
-          "target_tags": ["secure-web-servers"]
-        }
-      ],
-      "egress": [
-        {
-          "rule_name": "custom-egress-rule-1",
-          "protocol": "udp",
-          "ports": ["53"],
-          "destination_ranges": ["8.8.8.8/32"],
-          "target_tags": ["dns-servers"]
-        },
-        {
-          "rule_name": "custom-egress-rule-2",
-          "protocol": "tcp",
-          "ports": ["443"],
-          "destination_ranges": ["8.8.4.4/32"],
-          "target_tags": ["external-apps"]
-        }
-      ]
     }
   ]
