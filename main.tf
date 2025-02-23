@@ -64,7 +64,7 @@ module "firewall_egress" {
 
 ## default rules fw testing
 
-# Create a centralized firewall policy.
+# Create a centralized firewall policy for default rules like ofac/threat intel/default egress deny.
 resource "google_compute_firewall_policy" "default_deny_policy" {
   short_name  = "default-deny-egress"
   parent      = var.folder_id
@@ -91,7 +91,7 @@ resource "google_compute_firewall_policy_rule" "primary" {
 
     layer4_configs {
       ip_protocol = "tcp"
-      ports       = ["*"]
+      ports       = [""]
     }
   }
 }
