@@ -73,6 +73,7 @@ resource "google_compute_firewall_policy" "default_deny_policy" {
 
 ### EGRESS RULES ###
 
+## pass known traffic to vpc firewall rules ##
 resource "google_compute_firewall_policy_rule" "gotonext_all_egress" {
   firewall_policy         = google_compute_firewall_policy.default_deny_policy.id
   description             = "Resource created for Terraform acceptance testing"
