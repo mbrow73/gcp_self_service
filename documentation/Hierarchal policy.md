@@ -18,51 +18,7 @@ Implement **hierarchical firewall policies** at the folder level to:
 
 ### Architecture Diagram
 
-
-graph TD
-    %% Folder Structure
-    subgraph Folder["GCP Folder (Hierarchy)"]
-        direction TB
-        Policy["Firewall Policy: Default Deny<br/>Priority: 1-999"]
-        
-        %% Ingress Rules
-        Policy --> Ingress["Allow Ingress:<br/>✅ 172.16.0.0/12<br/>✅ 192.168.0.0/16<br/>✅ 35.235.240.0/20 (IAP)"]
-        
-        %% Egress Rules
-        Policy --> Egress["Allow Egress:<br/>✅ 172.16.0.0/12<br/>✅ 192.168.0.0/16"]
-    end
-
-    %% Projects
-    subgraph Project1["Project 1"]
-        direction BT
-        VPC1["VPC-1"] --> LocalRules1["Local Firewall Rules<br/>(Microsegmentation)"]
-        LocalRules1 --> Auto1["Auto-Created Rules<br/>(Priority 65535)"]
-    end
-
-    subgraph Project2["Project 2"]
-        direction BT
-        VPC2["VPC-2"] --> LocalRules2["Local Firewall Rules<br/>(Microsegmentation)"]
-        LocalRules2 --> Auto2["Auto-Created Rules<br/>(Priority 65535)"]
-    end
-
-    %% Traffic Flow
-    Ingress -->|Allowed Non-Routable<br/>+ IAP Traffic| VPC1
-    Ingress -->|Allowed Non-Routable<br/>+ IAP Traffic| VPC2
-    Egress -->|Allowed Non-Routable<br/>Egress| VPC1
-    Egress -->|Allowed Non-Routable<br/>Egress| VPC2
-
-    %% Policy Enforcement
-    Auto1 -->|Lower Priority| Final1["Final Decision:<br/>🛡️ Combine Hierarchy + Local Rules"]
-    Auto2 -->|Lower Priority| Final2["Final Decision:<br/>🛡️ Combine Hierarchy + Local Rules"]
-
-    %% Test Scenario
-    External["External SSH Attempt"] --> IAPCheck{"Source IP in<br/>35.235.240.0/20?"}
-    IAPCheck -->|Yes| IAPAllow["SSH Allowed via IAP<br/>(Hierarchy Allows → VPC Permits)"]
-    IAPCheck -->|No| Deny["SSH Blocked<br/>(Hierarchy Denies)"]
-    IAPAllow --> VPC1
-    IAPAllow --> VPC2
-
----
+![mermaid](../images/mermaid.png)
 
 ## Key Features
 | Feature | Description |
@@ -80,12 +36,12 @@ graph TD
 - **Hierarchical Policy**: Deny all ingress except `172.16.0.0/12`, `192.168.0.0/16`
 - **Local VPC Rule**: Allow SSH from `0.0.0.0/0`
 - **Result**: Connection blocked ❌  
-![sshfailed](../images/) 
+![sshfailed](../images/failedssh.png) 
 
 ### Test 2: SSH Success With IAP Range
 - **Hierarchical Policy Added**: `35.235.240.0/20` to allowed ingress
 - **Result**: SSH via IAP succeeded ✅  
-![sshallowed](../images/) 
+![sshallowed](../images/workingssh.png) 
 
 ---
 
