@@ -71,7 +71,7 @@ resource "google_compute_firewall_policy" "default_deny_policy" {
   description = "Firewall policy to deny all egress traffic by default for all projects under prod folder"
 }
 
-resource "google_compute_firewall_policy_rule" "primary" {
+resource "google_compute_firewall_policy_rule" "deny_all_egress" {
   firewall_policy         = google_compute_firewall_policy.default_deny_policy.id
   description             = "Resource created for Terraform acceptance testing"
   priority                = 1000
@@ -85,8 +85,9 @@ resource "google_compute_firewall_policy_rule" "primary" {
     dest_ip_ranges            = ["0.0.0.0/0"]
     src_ip_ranges             = []
     dest_fqdns                = []
+    src_fqdns                 = []
     dest_region_codes         = []
-    dest_threat_intelligences = ["iplist-known-malicious-ips"]
+    dest_threat_intelligences = []
 
     layer4_configs {
       ip_protocol = "all"
@@ -95,7 +96,7 @@ resource "google_compute_firewall_policy_rule" "primary" {
   }
 }
 
-resource "google_compute_firewall_policy_rule" "secondary_ingress" {
+resource "google_compute_firewall_policy_rule" "deny_all_ingress" {
   firewall_policy         = google_compute_firewall_policy.default_deny_policy.id
   description             = "Resource created for Terraform acceptance testing"
   priority                = 999
@@ -111,7 +112,7 @@ resource "google_compute_firewall_policy_rule" "secondary_ingress" {
     src_fqdns                 = []
     dest_fqdns                = []
     src_region_codes          = []
-    src_threat_intelligences = ["iplist-known-malicious-ips"]
+    src_threat_intelligences  = []
 
     layer4_configs {
       ip_protocol = "all"
