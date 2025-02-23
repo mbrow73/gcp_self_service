@@ -71,6 +71,16 @@ resource "google_compute_firewall_policy" "default_deny_policy" {
   description = "Firewall policy to deny all egress traffic by default for all projects under prod folder"
 }
 
+## Associate the default deny policy with the folder ##
+resource "google_compute_firewall_policy_association" "default" {
+  firewall_policy = google_compute_firewall_policy.default_deny_policy.id
+  attachment_target = var.folder_id
+  name = "my-association"
+}
+
+
+
+
 ### EGRESS RULES ###
 
 ## pass known traffic to vpc firewall rules ##
