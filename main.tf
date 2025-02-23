@@ -108,9 +108,10 @@ resource "google_compute_firewall_policy_rule" "secondary_ingress" {
   match {
     dest_ip_ranges            = ["0.0.0.0/0"]
     src_ip_ranges             = []
+    src_fqdns                 = []
     dest_fqdns                = []
-    dest_region_codes         = []
-    dest_threat_intelligences = ["iplist-known-malicious-ips"]
+    src_region_codes          = []
+    src_threat_intelligences = ["iplist-known-malicious-ips"]
 
     layer4_configs {
       ip_protocol = "all"
