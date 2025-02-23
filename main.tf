@@ -90,7 +90,7 @@ resource "google_compute_firewall_policy_rule" "primary" {
     dest_address_groups       = []
 
     layer4_configs {
-      ip_protocol = "tcp"
+      ip_protocol = "all"
       ports       = [""]
     }
   }
