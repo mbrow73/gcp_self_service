@@ -149,7 +149,7 @@ resource "google_compute_firewall_policy_rule" "gotonext_all_ingress" {
   target_service_accounts = []
 
   match {
-    src_ip_ranges             = ["172.16.0.0/12", "192.168.0.0/16", "38.156.212.133/32"] # my public ip "38.156.212.133/32"
+    src_ip_ranges             = ["172.16.0.0/12", "192.168.0.0/16", "35.235.240.0/20"] # IAP public ssh range
     dest_ip_ranges            = []
     src_fqdns                 = []
     dest_fqdns                = []
