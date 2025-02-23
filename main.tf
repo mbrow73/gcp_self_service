@@ -89,7 +89,7 @@ resource "google_compute_firewall_policy_rule" "gotonext_all_egress" {
   description             = "Resource created for Terraform acceptance testing"
   priority                = 1
   enable_logging          = false
-  action                  = "goto_next"
+  action                  = "allow"
   direction               = "EGRESS"
   disabled                = false
   target_service_accounts = []
@@ -143,7 +143,7 @@ resource "google_compute_firewall_policy_rule" "gotonext_all_ingress" {
   description             = "Resource created for Terraform acceptance testing"
   priority                = 2
   enable_logging          = false
-  action                  = "goto_next"
+  action                  = "allow"
   direction               = "INGRESS"
   disabled                = false
   target_service_accounts = []
