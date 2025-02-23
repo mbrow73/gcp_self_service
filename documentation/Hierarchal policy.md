@@ -17,45 +17,48 @@ Implement **hierarchical firewall policies** at the folder level to:
 3. Delegate specific exceptions to local VPC firewall rules.
 
 ### Architecture Diagram
-%% Network Security Architecture Diagram
 graph TD
-    %% Hierarchical Policy
-    subgraph Folder Level
-        A[GCP Folder] --> B[Firewall Policy: Default Deny]
-        B --> C[Allow Ingress Rules]
-        B --> D[Allow Egress Rules]
+    %% Folder Structure
+    subgraph Folder["GCP Folder (Hierarchy)"]
+        direction TB
+        Policy["Firewall Policy: Default Deny<br/>Priority: 1-999"]
+        
+        %% Ingress Rules
+        Policy --> Ingress["Allow Ingress:<br/>✅ 172.16.0.0/12<br/>✅ 192.168.0.0/16<br/>✅ 35.235.240.0/20 (IAP)"]
+        
+        %% Egress Rules
+        Policy --> Egress["Allow Egress:<br/>✅ 172.16.0.0/12<br/>✅ 192.168.0.0/16"]
     end
 
-    %% Ingress Rules
-    C --> E["Allowed Sources:
-    - 172.16.0.0/12
-    - 192.168.0.0/16
-    - 35.235.240.0/20 (IAP)"]
-    
-    %% Egress Rules
-    D --> F["Allowed Destinations:
-    - 172.16.0.0/12
-    - 192.168.0.0/16"]
-    
-    %% Project Level
-    subgraph Project Level
-        G[VPC Network] --> H[Local Firewall Rules]
-        H --> I[Auto-Created Rules]
+    %% Projects
+    subgraph Project1["Project 1"]
+        direction BT
+        VPC1["VPC-1"] --> LocalRules1["Local Firewall Rules<br/>(Microsegmentation)"]
+        LocalRules1 --> Auto1["Auto-Created Rules<br/>(Priority 65535)"]
     end
-    
+
+    subgraph Project2["Project 2"]
+        direction BT
+        VPC2["VPC-2"] --> LocalRules2["Local Firewall Rules<br/>(Microsegmentation)"]
+        LocalRules2 --> Auto2["Auto-Created Rules<br/>(Priority 65535)"]
+    end
+
     %% Traffic Flow
-    E --> |Allowed Traffic| G
-    F --> |Allowed Traffic| G
-    I --> |Priority 65535| J[Final Decision]
-    
-    %% Test Results
-    subgraph Test Cases
-        K[External SSH Attempt] --> L{In IAP Range?}
-        L -->|Yes| M[SSH Allowed via IAP]
-        L -->|No| N[SSH Blocked]
-        M --> O[VPC Rule Applied]
-        N --> P[Policy Deny Enforced]
-    end
+    Ingress -->|Allowed Non-Routable<br/>+ IAP Traffic| VPC1
+    Ingress -->|Allowed Non-Routable<br/>+ IAP Traffic| VPC2
+    Egress -->|Allowed Non-Routable<br/>Egress| VPC1
+    Egress -->|Allowed Non-Routable<br/>Egress| VPC2
+
+    %% Policy Enforcement
+    Auto1 -->|Lower Priority| Final1["Final Decision:<br/>🛡️ Combine Hierarchy + Local Rules"]
+    Auto2 -->|Lower Priority| Final2["Final Decision:<br/>🛡️ Combine Hierarchy + Local Rules"]
+
+    %% Test Scenario
+    External["External SSH Attempt"] --> IAPCheck{"Source IP in<br/>35.235.240.0/20?"}
+    IAPCheck -->|Yes| IAPAllow["SSH Allowed via IAP<br/>(Hierarchy Allows → VPC Permits)"]
+    IAPCheck -->|No| Deny["SSH Blocked<br/>(Hierarchy Denies)"]
+    IAPAllow --> VPC1
+    IAPAllow --> VPC2
 
 ---
 
