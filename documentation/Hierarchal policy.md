@@ -8,6 +8,7 @@ This document proposes a centralized hierarchical firewall architecture for GCP 
 ## Problem Statement
 - **Performance Issues**: Applying rules across thousands of projects causes 40+ minute apply times.
 - **State Conflicts**: Frequent "rule already exists" errors due to overlapping project-level rules.
+- **Default Rule Exceptions**: Every time a project requires decomm, we have to add the project number to our conditional statement i.g. (NOT PROJECTS: xxxxxxxxx, etc..)
 ---
 
 ## Proposed Solution
