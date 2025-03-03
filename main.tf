@@ -189,3 +189,32 @@ resource "google_compute_firewall_policy_rule" "deny_all_ingress" {
     }
   }
 }
+
+resource "google_compute_security_policy" "sni_allow_policy" {
+  name        = "sni-allow-policy"
+  description = "Allow traffic based on approved SNI values (inspected via the host header)"
+
+  rule {
+    priority = 1000
+    action   = "allow"
+    match {
+      expr {
+        # This expression checks that the host header exists and then allows traffic if it matches either approved SNI.
+        expression = "has(request.headers['host']) && (request.headers['host'] == 'example.com' || request.headers['host'] == 'another.example.com')"
+      }
+    }
+    preview = false
+  }
+
+  # A default rule that denies all other traffic.
+  rule {
+    priority = 2147483647
+    action   = "deny(403)"
+    match {
+      versioned_expr = "SRC_IPS_V1"
+      config {
+        src_ip_ranges = ["*"]
+      }
+    }
+  }
+}
