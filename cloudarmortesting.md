@@ -19,13 +19,13 @@ This document demonstrates the efficacy of gcp cloud armor host filtering/source
 ## IMAGES of policy
 
 - **Test policy 1:**
-  ![image](./images/test1)
+  ![image](./images/test1.png)
 
 - **Test policy 2:**
-  ![image](./images/test2)
+  ![image](./images/test2.png)
 
 - **Test policy 3:**  
-  ![image](./images/test3)
+  ![image](./images/test3.png)
 
 
 
@@ -45,7 +45,7 @@ This document demonstrates the efficacy of gcp cloud armor host filtering/source
 - **Success**
   ![image](./images/allow.png)
 - **Blocked**
-  ![fail](./images/fail.png)
+  ![image](./images/fail.png)
   
 
 
