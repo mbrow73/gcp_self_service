@@ -43,7 +43,7 @@ This document demonstrates the efficacy of gcp cloud armor host filtering/source
 ## Workload screenshots of failure vs success
 
 - **Success**
-  ![image](./images/allow.png)
+  ![image](./images/success.png)
 - **Blocked**
   ![image](./images/fail.png)
   
