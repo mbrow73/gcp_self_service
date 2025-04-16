@@ -19,13 +19,13 @@ This document demonstrates the efficacy of gcp cloud armor host filtering/source
 ## IMAGES of policy
 
 - **Test policy 1:**
-  ![ip restriction only](./images/test1)
+  ![image](./images/test1)
 
 - **Test policy 2:**
-  ![host header restriction only](./images/test2)
+  ![image](./images/test2)
 
 - **Test policy 3:**  
-  ![host header / ip restrict](./images/test3)
+  ![image](./images/test3)
 
 
 
@@ -35,7 +35,7 @@ This document demonstrates the efficacy of gcp cloud armor host filtering/source
 
 - **Cloud Armor Logs:**
   When a policy is matched/denied, it is displayed in gcp logs explorer as seen below (403 forbidden example)
-  ![logs explorer](./images/logsexplorer.png)
+  ![image](./images/logsexplorer.png)
 
 
 ---
@@ -43,7 +43,7 @@ This document demonstrates the efficacy of gcp cloud armor host filtering/source
 ## Workload screenshots of failure vs success
 
 - **Success**
-  ![success](./images/allow.png)
+  ![image](./images/allow.png)
 - **Blocked**
   ![fail](./images/fail.png)
   
