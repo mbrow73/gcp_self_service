@@ -1,4 +1,4 @@
-# Cloud armor policy/expression testing: Host header / souce IP restrictions.
+# Cloud armor policy/expression testing: Host header / source IP restrictions.
 
 This document demonstrates the efficacy of gcp cloud armor host filtering/source ip restrictions. The focus is on source ip/host header filtering before traffic enters the network.
 
